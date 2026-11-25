@@ -1,0 +1,16 @@
+{
+  "name": "devkasauti",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/web", "apps/api"],
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c blue,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "npm --workspace @devkasauti/api run dev",
+    "dev:web": "npm --workspace @devkasauti/web run dev",
+    "build": "npm --workspace @devkasauti/web run build",
+    "start:api": "npm --workspace @devkasauti/api run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
