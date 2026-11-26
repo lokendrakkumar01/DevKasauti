@@ -12,8 +12,19 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error('PORT or API_PORT must be a valid TCP port.');
 }
 
+const nodeEnv = process.env.NODE_ENV ?? 'development';
+const configuredWebOrigin = (process.env.WEB_ORIGIN ?? '').replace(/\\/+$/, '');
+const isRenderOrProduction = process.env.RENDER === 'true' || nodeEnv === 'production';
+const defaultWebOrigin = isRenderOrProduction
+  ? 'https://devkasauti-1.onrender.com'
+  : 'http://localhost:5173';
+// Blueprint ki purani localhost value ko production mein use na hone do.
+const webOrigin = isRenderOrProduction && (!configuredWebOrigin || configuredWebOrigin.includes('localhost'))
+  ? defaultWebOrigin
+  : configuredWebOrigin || defaultWebOrigin;
+
 export const env = Object.freeze({
-  nodeEnv: process.env.NODE_ENV ?? 'development',
+  nodeEnv,
   port,
-  webOrigin: process.env.WEB_ORIGIN ?? 'http://localhost:5173',
+  webOrigin,
 });
