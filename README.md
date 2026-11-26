@@ -24,7 +24,7 @@ Background worker (separate process, same codebase)
 
 ### Decisions
 
-- **One npm-workspaces repo:** the solo developer can run and version the web app and API together. The worker can become an independently started process without splitting the domain into premature microservices.
+- **One Git repo, independent npm apps:** the solo developer can run and version the web app and API together. App-local dependencies also avoid workspace symlinks on Windows. The worker can become an independently started process without splitting the domain into premature microservices.
 - **JavaScript with ES modules:** keeps the first learning steps focused on MERN and avoids a second TypeScript build setup. Add types when the domain stabilizes.
 - **React + Vite:** quick local feedback and a small client build. React Router, Axios and Lucide are included for the planned web app.
 - **Tailwind CSS v4 through its Vite plugin:** the CSS-first integration avoids a separate PostCSS config. `src/styles.css` starts the dark visual tokens and reusable page treatment.
@@ -51,7 +51,7 @@ DevKasauti/
 ├── docs/                     # Architecture and operating notes
 ├── .env.example
 ├── .gitignore
-└── package.json              # Workspace and common commands
+└── package.json              # Common commands; app dependencies stay app-local
 ```
 
 The `components`, `pages`, `worker`, and `docs` directories are reserved extension points, not claims that those product features already work.
@@ -63,6 +63,8 @@ Install the current Node.js LTS release (npm is bundled), then open PowerShell i
 ```powershell
 Copy-Item .env.example .env
 npm install
+npm --prefix apps/api install
+npm --prefix apps/web install
 npm run dev
 ```
 
@@ -74,6 +76,20 @@ To run one process on its own:
 npm run dev:api
 npm run dev:web
 ```
+
+## Deploy frontend and API to Render
+
+The root [`render.yaml`](./render.yaml) defines two Render services from this monorepo: an Express web service and a Vite static site. The frontend gets the API's public Render URL at build time. The API starts on Render's `PORT` and binds to `0.0.0.0`.
+
+1. Push the repository's `main` branch to GitHub.
+2. Sign in to Render and choose **New → Blueprint**. Connect `lokendrakkumar01/DevKasauti` and select the `main` branch. Review the two services and their plan before applying the Blueprint.
+3. Wait for both services to deploy. Open the `devkasauti-web` service and copy its public `https://...onrender.com` URL.
+4. In the `devkasauti-api` service, open **Environment**, change `WEB_ORIGIN` from `http://localhost:5173` to that exact frontend URL (no trailing slash), save, and let Render redeploy the API.
+5. Verify `https://<your-api-host>/api/health`, then open the frontend URL and check that its footer reports `API connected`. Refresh a nested route directly to confirm the SPA rewrite works.
+
+If Render says either service name is already taken in your workspace, change that service's `name` in `render.yaml` and resync the Blueprint. No database, paid add-on, AI credential, GitHub OAuth secret, or payment integration is part of this deployment. Render's current web-service requirements and Blueprint setup are documented in [Render Web Services](https://render.com/docs/web-services), [Blueprints](https://render.com/docs/infrastructure-as-code), and [Static Sites](https://render.com/docs/static-sites).
+
+To deploy without a Blueprint, create a **Web Service** using the repo root, build command `npm --prefix apps/api install --omit=dev`, start command `npm --prefix apps/api run start`, and health path `/api/health`. Then create a **Static Site** using the repo root, build command `npm --prefix apps/web install && npm --prefix apps/web run build`, publish directory `apps/web/dist`, and build variable `VITE_API_BASE_URL` set to the API's public URL. Add a rewrite `/*` → `/index.html`, then set the API's `WEB_ORIGIN` to the static site's exact public URL.
 
 Create `.env` from `.env.example` for local configuration. Never commit `.env` or put credentials in `VITE_*` variables: Vite exposes those values in browser code. `VITE_API_BASE_URL` is only for a public API URL.
 
