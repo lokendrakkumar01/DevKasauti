@@ -2,6 +2,16 @@ import { useEffect, useState } from 'react';
 import { ArrowUpRight, Braces, CheckCircle2, CircleHelp, Code2, Github, ShieldCheck, Sparkles } from 'lucide-react';
 import { api } from './lib/api.js';
 
+function scrollToSection(event, sectionId) {
+  event.preventDefault();
+  const target = document.getElementById(sectionId);
+  if (!target) return;
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Hash ko section id ke saath sync rakho, router-style #/path nahi.
+  window.history.replaceState(null, '', `#${sectionId}`);
+}
+
 const pillars = [
   { icon: Code2, title: 'Real work, real proof', text: 'Build against practical briefs and show the decisions behind your code.' },
   { icon: Sparkles, title: 'Useful AI feedback', text: 'Get structured review and code-specific questions to sharpen your thinking.' },
@@ -22,8 +32,8 @@ export default function App() {
       <div className="ambient ambient-one" /><div className="ambient ambient-two" />
       <header className="site-header page-width">
         <a className="brand" href="#top" aria-label="DevKasauti home"><span className="brand-mark"><Braces size={19} /></span>devkasauti<span className="brand-period">.</span></a>
-        <nav className="desktop-nav" aria-label="Main navigation"><a href="#why">Why DevKasauti</a><a href="#workflow">How it works</a><a href="#for-teams">For teams</a></nav>
-        <a className="header-link" href="#start">Get started <ArrowUpRight size={15} /></a>
+        <nav className="desktop-nav" aria-label="Main navigation"><a href="#why" onClick={(event) => scrollToSection(event, 'why')}>Why DevKasauti</a><a href="#workflow" onClick={(event) => scrollToSection(event, 'workflow')}>How it works</a><a href="#for-teams" onClick={(event) => scrollToSection(event, 'for-teams')}>For teams</a></nav>
+        <a className="header-link" href="#workflow" onClick={(event) => scrollToSection(event, 'workflow')}>Get started <ArrowUpRight size={15} /></a>
       </header>
 
       <section className="hero page-width" id="top">
@@ -31,7 +41,7 @@ export default function App() {
           <div className="eyebrow"><span className="eyebrow-dot" /> THE PROOF-BASED DEVELOPER PLATFORM</div>
           <h1>Don't just show<br />your skills. <span>Prove them.</span></h1>
           <p className="hero-description">Build real projects. Explain your decisions. Give every skill a story backed by work.</p>
-          <div className="hero-actions"><a className="button-primary" id="start" href="#workflow">Start proving your skills <ArrowUpRight size={17} /></a><a className="text-link" href="#why">Explore the platform <span>↓</span></a></div>
+          <div className="hero-actions"><a className="button-primary" href="#workflow" onClick={(event) => scrollToSection(event, 'workflow')}>Start proving your skills <ArrowUpRight size={17} /></a><a className="text-link" href="#why" onClick={(event) => scrollToSection(event, 'why')}>Explore the platform <span>↓</span></a></div>
           <div className="hero-note"><span className="avatar-stack"><i>A</i><i>R</i><i>K</i></span><span>Built for India's next generation of developers</span></div>
         </div>
 
