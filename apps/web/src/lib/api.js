@@ -6,7 +6,7 @@ const defaultBase = import.meta.env.PROD
   : 'http://localhost:4000/api';
 const isLocalOverride = import.meta.env.PROD
   && (requestedBase?.includes('localhost') || requestedBase?.includes('127.0.0.1'));
-const configuredBase = (requestedBase && !isLocalOverride ? requestedBase : defaultBase).replace(/\\/+$/, '');
+const configuredBase = (requestedBase && !isLocalOverride ? requestedBase : defaultBase).replace(/\/+$/, '');
 // Render se host-only URL aata hai; API routes hamesha /api ke neeche hain.
 const apiBase = configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`;
 
