@@ -7,8 +7,11 @@ function scrollToSection(event, sectionId) {
   const target = document.getElementById(sectionId);
   if (!target) return;
 
-  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  // Hash ko valid section id se sync rakho, broken router-style #/path se nahi.
+  const top = sectionId === 'top'
+    ? 0
+    : Math.max(0, target.getBoundingClientRect().top + window.scrollY - 20);
+  // Viewport ko directly scroll karo; overflow container ke andar atakne se bachta hai.
+  window.scrollTo({ top, behavior: 'smooth' });
   window.history.replaceState(null, '', `#${sectionId}`);
 }
 
@@ -48,7 +51,7 @@ export default function App() {
   }, [checkApi]);
 
   return (
-    <main className="min-h-screen overflow-hidden">
+    <main className="min-h-screen overflow-x-clip">
       <div className="ambient ambient-one" /><div className="ambient ambient-two" />
       <header className="site-header page-width">
         <a className="brand" href="#top" onClick={(event) => scrollToSection(event, 'top')} aria-label="DevKasauti home"><span className="brand-mark"><Braces size={19} /></span>devkasauti<span className="brand-period">.</span></a>
