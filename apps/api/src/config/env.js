@@ -13,7 +13,7 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
 }
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
-const configuredWebOrigin = (process.env.WEB_ORIGIN ?? '').replace(/\\/+$/, '');
+const configuredWebOrigin = (process.env.WEB_ORIGIN ?? '').replace(/\/+$/, '');
 const isRenderOrProduction = process.env.RENDER === 'true' || nodeEnv === 'production';
 const defaultWebOrigin = isRenderOrProduction
   ? 'https://devkasauti-1.onrender.com'
