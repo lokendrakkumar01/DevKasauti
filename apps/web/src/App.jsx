@@ -2,19 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { ArrowUpRight, Braces, CheckCircle2, CircleHelp, Code2, Github, RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
 import { api } from './lib/api.js';
 
-function scrollToSection(event, sectionId) {
-  event.preventDefault();
-  const target = document.getElementById(sectionId);
-  if (!target) return;
-
-  const top = sectionId === 'top'
-    ? 0
-    : Math.max(0, target.getBoundingClientRect().top + window.scrollY - 20);
-  // Viewport ko directly scroll karo; overflow container ke andar atakne se bachta hai.
-  window.scrollTo({ top, behavior: 'smooth' });
-  window.history.replaceState(null, '', `#${sectionId}`);
-}
-
 const pillars = [
   { icon: Code2, title: 'Real work, real proof', text: 'Build against practical briefs and show the decisions behind your code.' },
   { icon: Sparkles, title: 'Useful AI feedback', text: 'Get structured review and code-specific questions to sharpen your thinking.' },
@@ -54,13 +41,13 @@ export default function App() {
     <main className="min-h-screen overflow-x-clip">
       <div className="ambient ambient-one" /><div className="ambient ambient-two" />
       <header className="site-header page-width">
-        <a className="brand" href="#top" onClick={(event) => scrollToSection(event, 'top')} aria-label="DevKasauti home"><span className="brand-mark"><Braces size={19} /></span>devkasauti<span className="brand-period">.</span></a>
+        <a className="brand" href="#top" aria-label="DevKasauti home"><span className="brand-mark"><Braces size={19} /></span>devkasauti<span className="brand-period">.</span></a>
         <nav className="desktop-nav" aria-label="Main navigation">
-          <a href="#why" onClick={(event) => scrollToSection(event, 'why')}>Why DevKasauti</a>
-          <a href="#workflow" onClick={(event) => scrollToSection(event, 'workflow')}>How it works</a>
-          <a href="#for-teams" onClick={(event) => scrollToSection(event, 'for-teams')}>For teams</a>
+          <a href="#why">Why DevKasauti</a>
+          <a href="#workflow">How it works</a>
+          <a href="#for-teams">For teams</a>
         </nav>
-        <a className="header-link" href="#get-started" onClick={(event) => scrollToSection(event, 'get-started')}>Get started <ArrowUpRight size={15} /></a>
+        <a className="header-link" href="#get-started">Get started <ArrowUpRight size={15} /></a>
       </header>
 
       <section className="hero page-width" id="top">
@@ -69,8 +56,8 @@ export default function App() {
           <h1>Don't just show<br />your skills. <span>Prove them.</span></h1>
           <p className="hero-description">Build real projects. Explain your decisions. Give every skill a story backed by work.</p>
           <div className="hero-actions">
-            <a className="button-primary" href="#get-started" onClick={(event) => scrollToSection(event, 'get-started')}>Start proving your skills <ArrowUpRight size={17} /></a>
-            <a className="text-link" href="#why" onClick={(event) => scrollToSection(event, 'why')}>Explore the platform <span>↓</span></a>
+            <a className="button-primary" href="#get-started">Start proving your skills <ArrowUpRight size={17} /></a>
+            <a className="text-link" href="#why">Explore the platform <span>↓</span></a>
           </div>
           <div className="hero-note"><span className="avatar-stack" aria-hidden="true"><i>A</i><i>R</i><i>K</i></span><span>Built for India's next generation of developers</span></div>
         </div>
@@ -111,11 +98,11 @@ export default function App() {
             <RefreshCw size={16} className={apiState === 'checking' ? 'animate-spin' : ''} />
             {apiState === 'checking' ? 'Checking API…' : apiState === 'connected' ? 'API connected · Check again' : 'API unavailable · Retry'}
           </button>
-          <a className="text-link" href="#top" onClick={(event) => scrollToSection(event, 'top')}>Back to top ↑</a>
+          <a className="text-link" href="#top">Back to top ↑</a>
         </div>
       </section>
 
-      <footer className="site-footer page-width"><a className="brand" href="#top" onClick={(event) => scrollToSection(event, 'top')}><span className="brand-mark"><Braces size={17} /></span>devkasauti<span className="brand-period">.</span></a><span>Proof over promises.</span><span className="api-status"><i className={apiState} /> API {apiState}</span></footer>
+      <footer className="site-footer page-width"><a className="brand" href="#top"><span className="brand-mark"><Braces size={17} /></span>devkasauti<span className="brand-period">.</span></a><span>Proof over promises.</span><span className="api-status"><i className={apiState} /> API {apiState}</span></footer>
     </main>
   );
 }
